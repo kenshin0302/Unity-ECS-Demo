@@ -32,7 +32,7 @@ public class ECSWorld
     {
         var settingsGO = GameObject.Find("GameSettings");
         Settings = settingsGO?.GetComponent<GameSettings>();
-        
+
         var entityManager = World.Active.GetOrCreateManager<EntityManager>();
         var archetype = entityManager.CreateArchetype(typeof(PlayerInput));
         entityManager.CreateEntity(archetype);
@@ -41,7 +41,7 @@ public class ECSWorld
 
         LoadMeshes();
         World.Active.GetOrCreateManager<InputSystem>().SetupUI();
-        
+
         //Mono测试用
         CubePrefab = Resources.Load<GameObject>("Prefabs/Cube");
     }
@@ -118,7 +118,7 @@ public class ECSWorld
 
     public static void RotateCubes()
     {
-        for(int i=0;i< CubesWithScript.Count; i++)
+        for (int i = 0; i < CubesWithScript.Count; i++)
         {
             CubesWithScript[i].transform.rotation = Quaternion.AngleAxis(math.sin(Time.timeSinceLevelLoad) * 100, Vector3.up);
             CubesWithScript[i].transform.position = new Vector3(CubesWithScript[i].transform.position.x,
