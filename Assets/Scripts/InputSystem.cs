@@ -20,6 +20,7 @@ public class InputSystem : ComponentSystem
     private Button mMonoClearButton;
     private InputField mMonoCountInput;
     private Button mMonoCreateButton;
+    private Toggle mMonoToggle;
 
     public void SetupUI()
     {
@@ -37,12 +38,20 @@ public class InputSystem : ComponentSystem
         mMonoClearButton = GameObject.Find("MonoClearButton").GetComponent<Button>();
         mMonoCountInput = GameObject.Find("MonoInputField").GetComponent<InputField>();
         mMonoCreateButton = GameObject.Find("MonoCreateButton").GetComponent<Button>();
+        mMonoToggle = GameObject.Find("MonoToggle").GetComponent<Toggle>();
 
         mMonoClearButton.onClick.AddListener(ECSWorld.ClearAllMono);
-        mMonoCreateButton.onClick.AddListener(ECSWorld.CreateCubesMono);
+        mMonoCreateButton.onClick.AddListener(CreateCubesMono);
         mMonoCountInput.onValueChanged.AddListener(ECSWorld.ChangeCountMono);
         #endregion
     }
+
+    #region Mono
+    private void CreateCubesMono()
+    {
+        ECSWorld.CreateCubesMono(mMonoToggle.isOn);
+    }
+    #endregion
 
     private void ECSClear()
     {
@@ -78,6 +87,6 @@ public class InputSystem : ComponentSystem
 
     protected override void OnUpdate()
     {
-
+        ECSWorld.RotateCubes();
     }
 }

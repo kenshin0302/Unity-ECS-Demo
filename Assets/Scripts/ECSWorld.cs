@@ -69,13 +69,22 @@ public class ECSWorld
     }
 
     #region 创建Mono方块
-    public static void CreateCubesMono()
+    public static void CreateCubesMono(bool aIsWithScript)
     {
         WatchStart();
         for (int i = 0; i < mCreateCountMono; i++)
         {
             var pos = RandomPos();
-            Cubes.Add(GameObject.Instantiate(CubePrefab, pos, Quaternion.identity));
+            var cube = GameObject.Instantiate(CubePrefab, pos, Quaternion.identity);
+            if (aIsWithScript)
+            {
+                cube.AddComponent<BallMoveMono>();
+                Cubes.Add(cube);
+            }
+            else
+            {
+                CubesWithScript.Add(cube);
+            }
         }
         Debug.Log("Cost " + WatchStop() + " Milliseconds Creating " + mCreateCountMono + " MonoCubes.");
     }
@@ -87,16 +96,35 @@ public class ECSWorld
             GameObject.Destroy(c);
         }
         Cubes.Clear();
+
+        foreach (var c in CubesWithScript)
+        {
+            GameObject.Destroy(c);
+        }
+        CubesWithScript.Clear();
     }
 
     private static int mCreateCountMono;
     public static GameObject CubePrefab;
     public static List<GameObject> Cubes = new List<GameObject>();
+    public static List<GameObject> CubesWithScript = new List<GameObject>();
+
     public static void ChangeCountMono(string aCount)
     {
         int ret;
         if (int.TryParse(aCount, out ret))
             mCreateCountMono = ret;
+    }
+
+    public static void RotateCubes()
+    {
+        for(int i=0;i< CubesWithScript.Count; i++)
+        {
+            CubesWithScript[i].transform.rotation = Quaternion.AngleAxis(math.sin(Time.timeSinceLevelLoad) * 100, Vector3.up);
+            CubesWithScript[i].transform.position = new Vector3(CubesWithScript[i].transform.position.x,
+                CubesWithScript[i].transform.position.y + math.sin(Time.timeSinceLevelLoad) * Settings.YMoveFactor,
+                CubesWithScript[i].transform.position.z);
+        }
     }
     #endregion
 }
